@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatMe - Investor Pitch Deck</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="brand-logo">
+                <img src="Logo Full White.png" alt="ChatMe" class="logo-image">
+            </div>
+            <div class="loading-text">
+                <h2>Welcome to ChatMe</h2>
+                <p>Preparing your interactive pitch deck for Antler India...</p>
+                <p style="font-size: 14px; margin-top: 8px; opacity: 0.8;">Building the future of emotional AI for India</p>
+            </div>
+            <div class="loading-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="profile-info">
+                <div class="profile-pic">
+                    <img src="image.png" alt="APJ Abdul Kalam">
+                </div>
+                <div class="profile-details">
+                    <h3>Dr. APJ Abdul Kalam</h3>
+                    <p class="status">Former President of India • Aerospace Scientist</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-secondary" onclick="toggleFullscreen()" title="Toggle fullscreen">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be dynamically added here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-area">
+            <div class="input-container">
+                <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+                <button id="sendButton" class="send-btn" disabled title="Send message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="quick-replies" id="quickReplies">
+                <!-- Quick reply buttons will be added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="presentation-progress" id="presentationProgress">
+        <span id="progressText">Slide 1 of 8</span>
+    </div>
+
+    <!-- Slide Content Modal -->
+    <div class="modal" id="slideModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Slide Title</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Slide content will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
