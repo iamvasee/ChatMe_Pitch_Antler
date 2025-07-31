@@ -945,7 +945,9 @@ body {
     }
     
     .chat-messages {
-        padding: 16px 12px;
+        padding: 12px 8px 0 8px;
+        /* Remove excessive padding that creates too much space */
+        padding-bottom: 0;
     }
     
     .quick-replies-grid {
@@ -1063,9 +1065,8 @@ body {
     }
     
     .chat-messages {
-        padding: 12px 8px;
-        /* Ensure minimum space above footer */
-        padding-bottom: 500px;
+        /* Remove excessive padding that creates too much space */
+        padding-bottom: 0;
     }
     
     /* Fix Safari address bar issue with sticky footer */
@@ -1428,15 +1429,15 @@ body {
 @media (max-width: 768px) {
     body {
         /* Remove excessive padding, use sticky footer approach */
-        padding-bottom: 0;
-        min-height: 100vh;
+        padding-bottom: 100px;
+        min-height: 100;
         display: flex;
         flex-direction: column;
     }
     
     .chat-container {
         height: 100%;
-        margin: 0;
+        margin: 1px;
         border-radius: 0;
         /* Remove excessive padding */
         padding-bottom: 0;
@@ -1449,8 +1450,8 @@ body {
         /* Make messages area flexible */
         flex: 1;
         overflow-y: auto;
-        /* Ensure minimum space above footer */
-        padding-bottom: 500px;
+        /* Remove excessive padding that creates too much space */
+        padding-bottom: 0;
     }
     
     .chat-input-area {
