@@ -951,7 +951,39 @@ body {
         border-radius: 0;
     }
     
+    .message {
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+    
+    .message-avatar {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .message-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+    
     .message-content {
+        max-width: 80%;
+        padding: 12px 16px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .message.user .message-content {
+        max-width: 75%;
+    }
+    
+    .message.bot .message-content {
         max-width: 85%;
     }
     
@@ -965,13 +997,17 @@ body {
     }
     
     .chat-header, .chat-messages, .chat-input-area {
-        padding: 20px;
+        padding: 16px;
+    }
+    
+    .chat-messages {
+        padding: 16px 12px;
     }
     
     .quick-replies-grid {
         grid-template-columns: 1fr;
         gap: 6px;
-        padding: 16px;
+        padding: 12px;
     }
     
     .quick-reply {
@@ -985,6 +1021,71 @@ body {
     
     .quick-replies-header h4 {
         font-size: 15px;
+    }
+    
+    .message-html h1 { font-size: 18px; }
+    .message-html h2 { font-size: 16px; }
+    .message-html h3 { font-size: 15px; }
+    .message-html h4 { font-size: 14px; }
+    .message-html h5 { font-size: 13px; }
+    .message-html h6 { font-size: 12px; }
+    
+    .message-html p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .message-html ul, .message-html ol {
+        padding-left: 16px;
+    }
+    
+    .message-html li {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 480px) {
+    .message-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .message-content {
+        max-width: 85%;
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+    
+    .message.user .message-content {
+        max-width: 80%;
+    }
+    
+    .message.bot .message-content {
+        max-width: 90%;
+    }
+    
+    .chat-header, .chat-messages, .chat-input-area {
+        padding: 12px;
+    }
+    
+    .chat-messages {
+        padding: 12px 8px;
+    }
+    
+    .message-html h1 { font-size: 16px; }
+    .message-html h2 { font-size: 15px; }
+    .message-html h3 { font-size: 14px; }
+    .message-html h4 { font-size: 13px; }
+    .message-html h5 { font-size: 12px; }
+    .message-html h6 { font-size: 11px; }
+    
+    .message-html p {
+        font-size: 13px;
+    }
+    
+    .message-html li {
+        font-size: 13px;
     }
 }
 
