@@ -503,7 +503,7 @@ body {
     border-top: 1px solid #333;
     position: sticky;
     bottom: 0;
-    z-index: 100;
+    z-index: 999;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -546,6 +546,7 @@ body {
     box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
     position: relative;
     overflow: hidden;
+    z-index: 1000;
 }
 
 .quick-replies-header::before {
@@ -947,7 +948,8 @@ body {
     
     .quick-replies-header {
         position: relative;
-        z-index: 10;
+        z-index: 1000;
+        margin-bottom: 8px;
     }
     
     .message-html h1 { font-size: 18px; }
@@ -1009,7 +1011,7 @@ body {
     .quick-replies-header {
         margin-bottom: 8px;
         position: relative;
-        z-index: 10;
+        z-index: 1000;
     }
     
     .message-html h1 { font-size: 16px; }
