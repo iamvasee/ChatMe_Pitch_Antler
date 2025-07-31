@@ -9,15 +9,26 @@ class ChatMePitchDeck {
         this.usedQuestions = new Set(); // Track used questions
         this.fullscreenPrompted = false;
         
-        // Audio elements
+        // Audio elements - handle missing files gracefully
         this.botMessageSound = new Audio('Message received.mp3');
         this.userMessageSound = new Audio('message_sent.mp3');
         this.responseSound = new Audio('Message_received.mp3');
+        
+        // Handle audio loading errors
+        this.botMessageSound.addEventListener('error', () => console.log('Bot message sound not found'));
+        this.userMessageSound.addEventListener('error', () => console.log('User message sound not found'));
+        this.responseSound.addEventListener('error', () => console.log('Response sound not found'));
         
         this.chatMessages = document.getElementById('chatMessages');
         this.quickRepliesContainer = document.getElementById('quickReplies');
         this.loadingScreen = document.getElementById('loadingScreen');
         this.chatContainer = document.querySelector('.chat-container');
+        
+        // Check if required elements exist
+        if (!this.chatMessages || !this.quickRepliesContainer || !this.loadingScreen || !this.chatContainer) {
+            console.error('Required DOM elements not found');
+            return;
+        }
         
         this.setupEventListeners();
         this.initializePresentation();
@@ -100,7 +111,9 @@ As someone who always believed that technology should serve humanity, I am excit
             this.hideTyping();
             
             // Play response sound when message appears
-            this.responseSound.play().catch(e => console.log('Response sound failed:', e));
+            if (this.responseSound && this.responseSound.readyState >= 2) {
+                this.responseSound.play().catch(e => console.log('Response sound failed:', e));
+            }
             
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message bot';
@@ -155,7 +168,9 @@ As someone who always believed that technology should serve humanity, I am excit
 
     addUserMessage(message) {
         // Play user message sound
-        this.userMessageSound.play().catch(e => console.log('Audio play failed:', e));
+        if (this.userMessageSound && this.userMessageSound.readyState >= 2) {
+            this.userMessageSound.play().catch(e => console.log('Audio play failed:', e));
+        }
         
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message user';
