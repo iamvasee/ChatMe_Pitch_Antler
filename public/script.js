@@ -102,112 +102,144 @@ class ChatMePitchDeck {
             }, false);
         }
         
-        // Mobile-specific quick replies handling
-        this.setupMobileQuickReplies();
+        // Add scroll detection for accordion visibility
+        this.setupScrollDetection();
     }
 
-    setupMobileQuickReplies() {
-        // Check if we're on mobile
-        const isMobile = window.innerWidth <= 768;
+    setupScrollDetection() {
+        let lastScrollTop = 0;
+        let scrollDirection = 'down';
+        let scrollThreshold = 50; // Minimum scroll distance to trigger accordion reveal
         
-        if (isMobile) {
-            // Auto-show quick replies after a delay if user hasn't interacted
-            let quickRepliesShown = false;
+        this.chatMessages.addEventListener('scroll', (e) => {
+            const currentScrollTop = e.target.scrollTop;
+            const scrollDistance = Math.abs(currentScrollTop - lastScrollTop);
             
-            setTimeout(() => {
-                if (!quickRepliesShown) {
-                    this.ensureQuickRepliesVisible();
-                    quickRepliesShown = true;
+            // Determine scroll direction
+            if (currentScrollTop > lastScrollTop) {
+                scrollDirection = 'down';
+            } else {
+                scrollDirection = 'up';
+            }
+            
+            // If scrolling down and near the bottom, reveal accordion
+            if (scrollDirection === 'down' && scrollDistance > scrollThreshold) {
+                const scrollPercentage = (currentScrollTop / (e.target.scrollHeight - e.target.clientHeight)) * 100;
+                
+                // If scrolled more than 80% down, ensure accordion is visible
+                if (scrollPercentage > 80) {
+                    this.ensureAccordionVisible();
                 }
-            }, 5000); // Show after 5 seconds if no interaction
+            }
             
-            // Show quick replies when user scrolls to bottom
-            this.chatMessages.addEventListener('scroll', () => {
-                const isAtBottom = this.chatMessages.scrollTop + this.chatMessages.clientHeight >= this.chatMessages.scrollHeight - 50;
-                if (isAtBottom) {
-                    this.ensureQuickRepliesVisible();
-                }
-            });
-            
-            // Add a floating indicator when quick replies are hidden
-            this.addFloatingIndicator();
+            lastScrollTop = currentScrollTop;
+        }, { passive: true });
+    }
+
+    ensureAccordionVisible() {
+        const accordionPanel = document.querySelector('.quick-replies-panel');
+        const accordionHeader = document.querySelector('.quick-replies-header');
+        
+        if (accordionPanel && accordionHeader) {
+            // Check if accordion is currently hidden
+            if (!accordionPanel.classList.contains('open')) {
+                // Open the accordion
+                accordionPanel.classList.add('open');
+                accordionHeader.setAttribute('aria-expanded', 'true');
+                
+                // Add a subtle animation to draw attention
+                accordionHeader.style.animation = 'accordionPulse 0.6s ease-in-out';
+                setTimeout(() => {
+                    accordionHeader.style.animation = '';
+                }, 600);
+                
+                // Scroll the accordion into view smoothly
+                setTimeout(() => {
+                    accordionHeader.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'end',
+                        inline: 'nearest'
+                    });
+                }, 100);
+            }
         }
     }
 
-    ensureQuickRepliesVisible() {
-        const quickReplies = document.querySelector('.quick-replies');
-        if (quickReplies) {
-            // Ensure the quick replies are visible
-            quickReplies.style.display = 'block';
-            quickReplies.style.opacity = '1';
-            
-            // Add a subtle animation to draw attention
-            quickReplies.style.animation = 'bounce 0.6s ease-in-out';
-            setTimeout(() => {
-                quickReplies.style.animation = '';
-            }, 600);
+    checkAccordionVisibility() {
+        const accordionHeader = document.querySelector('.quick-replies-header');
+        if (!accordionHeader) return;
+        
+        // Check if accordion is visible in viewport
+        const rect = accordionHeader.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        // If not visible and there are available questions, show a hint
+        if (!isVisible && this.quickReplies.filter(q => !this.usedQuestions.has(q)).length > 0) {
+            this.showAccordionHint();
         }
     }
 
-    addFloatingIndicator() {
-        // Create a floating indicator that appears when quick replies might be hidden
-        const indicator = document.createElement('div');
-        indicator.className = 'floating-indicator';
-        indicator.innerHTML = '💬';
-        indicator.style.cssText = `
-            position: fixed;
-            bottom: 140px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
-            z-index: 998;
-            cursor: pointer;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+    showAccordionHint() {
+        // Remove existing hint if any
+        const existingHint = document.querySelector('.accordion-hint');
+        if (existingHint) {
+            existingHint.remove();
+        }
+        
+        // Create hint element
+        const hint = document.createElement('div');
+        hint.className = 'accordion-hint';
+        hint.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span>💬</span>
+                <span>Scroll down for questions</span>
+                <span>⬇️</span>
+            </div>
         `;
         
-        document.body.appendChild(indicator);
+        // Style the hint
+        hint.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(139, 92, 246, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-family: 'Manrope', sans-serif;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            animation: hintSlideUp 0.5s ease-out;
+            cursor: pointer;
+        `;
         
-        // Show indicator after a delay
-        setTimeout(() => {
-            indicator.style.opacity = '1';
-            indicator.style.transform = 'scale(1)';
-        }, 3000);
+        document.body.appendChild(hint);
         
-        // Click to show quick replies
-        indicator.addEventListener('click', () => {
-            this.ensureQuickRepliesVisible();
-            // Hide indicator after click
-            indicator.style.opacity = '0';
-            indicator.style.transform = 'scale(0.8)';
-            setTimeout(() => {
-                if (indicator.parentNode) {
-                    indicator.parentNode.removeChild(indicator);
-                }
-            }, 300);
+        // Add click handler to scroll to accordion
+        hint.addEventListener('click', () => {
+            const accordionHeader = document.querySelector('.quick-replies-header');
+            if (accordionHeader) {
+                accordionHeader.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'end'
+                });
+            }
+            hint.remove();
         });
         
-        // Auto-hide indicator after 10 seconds
+        // Auto-remove after 5 seconds
         setTimeout(() => {
-            indicator.style.opacity = '0';
-            indicator.style.transform = 'scale(0.8)';
-            setTimeout(() => {
-                if (indicator.parentNode) {
-                    indicator.parentNode.removeChild(indicator);
-                }
-            }, 300);
-        }, 10000);
+            if (hint.parentNode) {
+                hint.style.animation = 'hintSlideDown 0.3s ease-in';
+                setTimeout(() => {
+                    if (hint.parentNode) {
+                        hint.parentNode.removeChild(hint);
+                    }
+                }, 300);
+            }
+        }, 5000);
     }
 
     attemptAutomaticFullscreen() {
@@ -429,6 +461,7 @@ Let's build India's first AI entertainment empire together! 🙏
 **Thank you for exploring ChatMe with me!**`;
 
             this.addBotMessage(completionMessage);
+            this.stopAccordionVisibilityMonitoring();
             return;
         }
         
@@ -507,6 +540,28 @@ Let's build India's first AI entertainment empire together! 🙏
                 accordionHeader.click();
             }
         });
+        
+        // Check if accordion is visible after a short delay
+        setTimeout(() => {
+            this.checkAccordionVisibility();
+        }, 500);
+        
+        // Set up periodic visibility checks
+        this.startAccordionVisibilityMonitoring();
+    }
+
+    startAccordionVisibilityMonitoring() {
+        // Check accordion visibility every 3 seconds
+        this.accordionVisibilityInterval = setInterval(() => {
+            this.checkAccordionVisibility();
+        }, 3000);
+    }
+
+    stopAccordionVisibilityMonitoring() {
+        if (this.accordionVisibilityInterval) {
+            clearInterval(this.accordionVisibilityInterval);
+            this.accordionVisibilityInterval = null;
+        }
     }
 
     handleQuickReply(reply) {
@@ -627,13 +682,42 @@ Let's build India's first AI entertainment empire together! 🙏
     }
 
     sanitizeHTML(html) {
-        // Create a temporary div to parse HTML
+        // If this is HTML content from our config (trusted source), allow it with minimal sanitization
+        if (html.includes('<div style="font-family:') || html.includes('<h2 style="color:')) {
+            // This is trusted content from config.js - only remove potentially dangerous scripts
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            
+            // Remove any script tags for safety
+            const scripts = temp.querySelectorAll('script');
+            scripts.forEach(script => script.remove());
+            
+            // Remove any event handlers
+            const elementsWithEvents = temp.querySelectorAll('*');
+            elementsWithEvents.forEach(el => {
+                const attrs = el.attributes;
+                for (let i = attrs.length - 1; i >= 0; i--) {
+                    const attr = attrs[i];
+                    if (attr.name.startsWith('on')) {
+                        el.removeAttribute(attr.name);
+                    }
+                }
+            });
+            
+            return temp.innerHTML;
+        }
+        
+        // For other content, use strict sanitization
         const temp = document.createElement('div');
         temp.innerHTML = html;
         
-        // Define allowed tags and attributes
-        const allowedTags = ['div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ul', 'ol', 'li', 'strong', 'b', 'em', 'i', 'br', 'span'];
-        const allowedAttributes = ['style', 'class', 'id'];
+        // Define allowed tags and attributes - expanded to include all HTML used in responses
+        const allowedTags = [
+            'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ul', 'ol', 'li', 
+            'strong', 'b', 'em', 'i', 'br', 'span', 'table', 'thead', 'tbody', 
+            'tr', 'td', 'th', 'blockquote', 'code', 'pre', 'a', 'hr'
+        ];
+        const allowedAttributes = ['style', 'class', 'id', 'href', 'target'];
         
         // Recursively sanitize the DOM tree
         const sanitizeNode = (node) => {
