@@ -175,71 +175,9 @@ class ChatMePitchDeck {
         
         // If not visible and there are available questions, show a hint
         if (!isVisible && this.quickReplies.filter(q => !this.usedQuestions.has(q)).length > 0) {
-            this.showAccordionHint();
+            // Removed the hint functionality as requested
+            // this.showAccordionHint();
         }
-    }
-
-    showAccordionHint() {
-        // Remove existing hint if any
-        const existingHint = document.querySelector('.accordion-hint');
-        if (existingHint) {
-            existingHint.remove();
-        }
-        
-        // Create hint element
-        const hint = document.createElement('div');
-        hint.className = 'accordion-hint';
-        hint.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span>💬</span>
-                <span>Scroll down for questions</span>
-                <span>⬇️</span>
-            </div>
-        `;
-        
-        // Style the hint
-        hint.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(139, 92, 246, 0.9);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-family: 'Manrope', sans-serif;
-            z-index: 1000;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-            animation: hintSlideUp 0.5s ease-out;
-            cursor: pointer;
-        `;
-        
-        document.body.appendChild(hint);
-        
-        // Add click handler to scroll to accordion
-        hint.addEventListener('click', () => {
-            const accordionHeader = document.querySelector('.quick-replies-header');
-            if (accordionHeader) {
-                accordionHeader.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'end'
-                });
-            }
-            hint.remove();
-        });
-        
-        // Auto-remove after 5 seconds
-        setTimeout(() => {
-            if (hint.parentNode) {
-                hint.style.animation = 'hintSlideDown 0.3s ease-in';
-                setTimeout(() => {
-                    if (hint.parentNode) {
-                        hint.parentNode.removeChild(hint);
-                    }
-                }, 300);
-            }
-        }, 5000);
     }
 
     attemptAutomaticFullscreen() {

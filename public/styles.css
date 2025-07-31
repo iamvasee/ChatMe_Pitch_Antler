@@ -1036,6 +1036,14 @@ body {
 }
 
 @media (max-width: 480px) {
+    body {
+        /* Remove excessive padding, use sticky footer approach */
+        padding-bottom: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
     .message-content {
         max-width: 95%;
         padding: 12px 14px;
@@ -1056,17 +1064,24 @@ body {
     
     .chat-messages {
         padding: 12px 8px;
+        /* Ensure minimum space above footer */
+        padding-bottom: 500px;
     }
     
-    /* Fix Safari address bar issue */
+    /* Fix Safari address bar issue with sticky footer */
     .chat-input-area {
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        border-top: 1px solid #333;
         padding-bottom: calc(12px + env(safe-area-inset-bottom));
-        margin-bottom: env(safe-area-inset-bottom);
+        margin-bottom: 0;
     }
     
     .quick-replies {
-        padding-bottom: env(safe-area-inset-bottom);
-        margin-bottom: 20px; /* Extra space to avoid address bar */
+        padding-bottom: calc(env(safe-area-inset-bottom));
+        margin-bottom: 0;
     }
     
     .quick-replies-header {
@@ -1075,6 +1090,8 @@ body {
         z-index: 1000;
         padding: 14px 16px;
         min-height: 52px; /* Even better touch target for small screens */
+        /* Remove excessive margin */
+        margin-bottom: 8px;
     }
     
     .quick-reply {
@@ -1171,6 +1188,11 @@ body {
     
     .status {
         font-size: 9px;
+    }
+    
+    .chat-messages {
+        /* Ensure minimum space above footer */
+        padding-bottom: 500px;
     }
 }
 
@@ -1353,28 +1375,6 @@ body {
     }
 }
 
-@keyframes hintSlideUp {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
-}
-
-@keyframes hintSlideDown {
-    from {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
-}
-
 /* Hide chat container during loading */
 .chat-container {
     opacity: 0;
@@ -1421,5 +1421,73 @@ body {
     
     .brand-logo {
         animation: none !important;
+    }
+} 
+
+/* Mobile-specific accordion visibility fixes */
+@media (max-width: 768px) {
+    body {
+        /* Remove excessive padding, use sticky footer approach */
+        padding-bottom: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .chat-container {
+        height: 100%;
+        margin: 0;
+        border-radius: 0;
+        /* Remove excessive padding */
+        padding-bottom: 0;
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .chat-messages {
+        /* Make messages area flexible */
+        flex: 1;
+        overflow-y: auto;
+        /* Ensure minimum space above footer */
+        padding-bottom: 500px;
+    }
+    
+    .chat-input-area {
+        /* Make footer sticky */
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        border-top: 1px solid #333;
+        /* Remove excessive padding */
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+        margin-bottom: 0;
+    }
+    
+    .quick-replies {
+        /* Remove excessive padding */
+        padding-bottom: calc(env(safe-area-inset-bottom));
+        margin-bottom: 0;
+    }
+    
+    .quick-replies-header {
+        position: relative;
+        z-index: 1000;
+        margin-bottom: 8px;
+        /* Remove excessive margin */
+        margin-bottom: 8px;
+    }
+    
+    .quick-replies-panel {
+        /* Remove excessive padding */
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .quick-replies-grid {
+        /* Remove excessive padding */
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
 } 
