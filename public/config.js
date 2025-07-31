@@ -19,7 +19,8 @@ const PITCH_DECK_CONFIG = {
     "What languages do you support?",
     "How does the token economy work?",
     "Tell me about AI influencer marketing",
-    "What's the MemOne vision?"
+    "What's the MemOne vision?",
+    "Contact Me"
   ],
 
   responses: {
@@ -218,7 +219,7 @@ const PITCH_DECK_CONFIG = {
         <p>Let's build India's first AI entertainment empire together.</p>
 
         <p><strong>Contact Information:</strong></p>
-        <p>Email: investors@chatme.at<br>
+        <p>Email: vaseekaran@chatme.at<br>
         Website: www.chatme.at</p>
       </div>
     `,
@@ -606,6 +607,38 @@ const PITCH_DECK_CONFIG = {
         </ul>
 
         <p><strong>The Vision:</strong> MemOne becomes the infrastructure layer for AI personalization across all industries.</p>
+      </div>
+    `,
+
+    "Contact Me": `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#222;line-height:1.5;">
+        <h2 style="color:#dc3545;margin-top:0;">📞 Let's Connect, Antler India!</h2>
+
+        <p><strong>Fun fact:</strong> I literally cross your Indiranagar office every single day! 🚶‍♂️</p>
+        <p>Small world, right? Maybe we should make this daily crossing more productive than just avoiding Bangalore traffic.</p>
+
+        <p><strong>Contact Information:</strong></p>
+        <ul>
+          <li><strong>Email:</strong> vaseekaran@chatme.at</li>
+          <li><strong>Phone:</strong> +918903322888</li>
+          <li><strong>Website:</strong> www.chatme.at</li>
+          <li><strong>Location:</strong> Indiranagar, Bangalore (your neighbor! 🏠)</li>
+        </ul>
+
+        <p><strong>Why Antler India?</strong></p>
+        <ul>
+          <li><strong>Local Advantage:</strong> I'm literally your neighbor in Indiranagar - no timezone issues!</li>
+          <li><strong>India-First Focus:</strong> You understand the Indian market better than anyone</li>
+          <li><strong>AI Revolution:</strong> Perfect timing for India's AI moment</li>
+          <li><strong>Cultural Moat:</strong> We're building something global players can't replicate</li>
+        </ul>
+
+        <p><strong>Next Steps:</strong></p>
+        <p>Let's grab a coffee at your favorite Indiranagar spot and discuss how we can build India's first AI entertainment empire together. I promise to bring better conversation than my daily traffic rants! ☕</p>
+
+        <p><strong>P.S.:</strong> If you're reading this, we're probably closer than you think. Maybe we've already crossed paths at that traffic signal! 🚦</p>
+
+        <p><strong>Let's make this daily crossing count! 🙏</strong></p>
       </div>
     `
   }

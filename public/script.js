@@ -70,80 +70,32 @@ class ChatMePitchDeck {
             return;
         }
 
-        // Try to enter fullscreen automatically
+        // Try to enter fullscreen automatically after a short delay
         setTimeout(() => {
             this.enterFullscreen().catch(error => {
                 console.log('Automatic fullscreen failed:', error);
-                // Fallback: show manual fullscreen button
-                this.showManualFullscreenButton();
+                // No fallback button - user can use the header button if needed
             });
-        }, 1000); // 1 second delay after page load
-    }
-
-    showManualFullscreenButton() {
-        // Create a subtle fullscreen button that appears in the corner
-        const fullscreenButton = document.createElement('button');
-        fullscreenButton.innerHTML = '<i class="fas fa-expand"></i>';
-        fullscreenButton.style.cssText = `
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(139, 92, 246, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        `;
-
-        fullscreenButton.addEventListener('mouseenter', () => {
-            fullscreenButton.style.transform = 'scale(1.1)';
-            fullscreenButton.style.background = 'rgba(139, 92, 246, 1)';
-        });
-
-        fullscreenButton.addEventListener('mouseleave', () => {
-            fullscreenButton.style.transform = 'scale(1)';
-            fullscreenButton.style.background = 'rgba(139, 92, 246, 0.9)';
-        });
-
-        fullscreenButton.addEventListener('click', () => {
-            this.enterFullscreen();
-            fullscreenButton.remove();
-        });
-
-        document.body.appendChild(fullscreenButton);
-
-        // Auto-remove after 10 seconds
-        setTimeout(() => {
-            if (fullscreenButton.parentNode) {
-                fullscreenButton.remove();
-            }
-        }, 10000);
+        }, 1500); // 1.5 second delay after page load
     }
 
     startPresentation() {
         // Show the first message immediately after loading screen disappears
-        const welcomeMessage = `🙏 **Namaste! Welcome to ChatMe**
+        const welcomeMessage = `🙏 **Namaste! My dear friends**
 
-I am Dr. APJ Abdul Kalam, former President of India and aerospace scientist. Today, I have the honor of presenting ChatMe - India's AI Companion Platform.
+I am Dr. APJ Abdul Kalam, former President of India, aerospace scientist, and now, I am also one of the AI characters on ChatMe.At - India's revolutionary AI Companion Platform.
 
-*"The future of emotional AI, built for 1.4B desi hearts."*
+*"Dream, dream, dream. Dreams transform into thoughts and thoughts result in action."*
 
-Our tagline says it all: *"Not just chat. Real connection."*
+This is exactly what ChatMe is doing - transforming dreams into reality for 1.4 billion Indian hearts.
 
-ChatMe is building the future of emotional AI for India. We're creating not just a product, but a cultural phenomenon that understands the heart of 1.4 billion desi souls.
+*"The future of emotional AI, built for 1.4B desi souls."*
 
-As someone who always believed in the power of technology to serve humanity, I'm excited to share this revolutionary journey with you.
+Our mission is clear: *"Not just chat. Real connection."*
 
-**What would you like to know about ChatMe?**`;
+As someone who always believed that technology should serve humanity, I am excited to present this revolutionary platform that understands the heart and soul of India. ChatMe is not just building a product - we are creating a cultural phenomenon that will touch every Indian household.
+
+**What would you like to know about this incredible journey?**`;
 
         this.addBotMessage(welcomeMessage, () => {
             this.showQuickReplies();
@@ -348,46 +300,41 @@ Let's build India's first AI entertainment empire together! 🙏
     handleSendMessage() {
         const message = this.messageInput.value.trim();
         if (message && !this.isTyping) {
-            this.addUserMessage(message);
-            this.messageInput.value = '';
+            // Check if the message matches any of our predefined questions
+            const lowerMessage = message.toLowerCase();
+            let matchedQuestion = null;
             
-            // Check if the message matches any of our predefined responses
-            let response = null;
-            
-            // First check for exact matches
-            if (this.responses[message]) {
-                response = this.responses[message];
-            } else {
-                // Check for partial matches or keywords
-                const lowerMessage = message.toLowerCase();
-                for (const [question, answer] of Object.entries(this.responses)) {
-                    const lowerQuestion = question.toLowerCase();
-                    if (lowerMessage.includes(lowerQuestion.slice(0, 10)) || 
-                        this.hasCommonKeywords(lowerMessage, lowerQuestion)) {
-                        response = answer;
-                        break;
-                    }
+            // Check for exact or partial matches with predefined questions
+            for (const question of this.quickReplies) {
+                const lowerQuestion = question.toLowerCase();
+                if (lowerMessage === lowerQuestion || 
+                    lowerMessage.includes(lowerQuestion.slice(0, 10)) || 
+                    this.hasCommonKeywords(lowerMessage, lowerQuestion)) {
+                    matchedQuestion = question;
+                    break;
                 }
             }
             
-            // If no specific response found, provide a general response
-            if (!response) {
-                response = `Thank you for your question: "${message}"
+            if (matchedQuestion && !this.usedQuestions.has(matchedQuestion)) {
+                // If it matches a predefined question, handle it as a quick reply
+                this.handleQuickReply(matchedQuestion);
+            } else {
+                // If no match or question already used, show a helpful message
+                this.addUserMessage(message);
+                setTimeout(() => {
+                    this.addBotMessage(`Thank you for your question: "${message}"
 
-I appreciate your interest in ChatMe. While I have detailed information prepared for specific aspects of our business, your question touches on areas that would benefit from a direct conversation.
+I have detailed information prepared for specific aspects of our business. Please select from the available questions above, or ask about contacting our team.
 
-**I'd be happy to address this in detail. Please contact us at:**
+**For custom inquiries, please contact us at:**
 • Email: investors@chatme.at
-• Website: www.chatme.at
-
-Is there a specific aspect from our prepared presentation you'd like to explore further?`;
+• Website: www.chatme.at`, () => {
+                        this.showQuickReplies();
+                    });
+                }, 1000);
             }
             
-            setTimeout(() => {
-                this.addBotMessage(response, () => {
-                    this.showQuickReplies();
-                });
-            }, 1000);
+            this.messageInput.value = '';
         }
     }
 
