@@ -15,8 +15,6 @@ class ChatMePitchDeck {
         this.responseSound = new Audio('Message_received.mp3');
         
         this.chatMessages = document.getElementById('chatMessages');
-        this.messageInput = document.getElementById('messageInput');
-        this.sendButton = document.getElementById('sendButton');
         this.quickRepliesContainer = document.getElementById('quickReplies');
         this.loadingScreen = document.getElementById('loadingScreen');
         this.chatContainer = document.querySelector('.chat-container');
@@ -49,13 +47,6 @@ class ChatMePitchDeck {
     }
 
     setupEventListeners() {
-        this.sendButton.addEventListener('click', () => this.handleSendMessage());
-        this.messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !this.isTyping) {
-                this.handleSendMessage();
-            }
-        });
-
         // Attempt automatic fullscreen immediately when page loads
         this.attemptAutomaticFullscreen();
     }
@@ -93,7 +84,7 @@ This is exactly what ChatMe is doing - transforming dreams into reality for 1.4 
 
 Our mission is clear: *"Not just chat. Real connection."*
 
-As someone who always believed that technology should serve humanity, I am excited to present this revolutionary platform that understands the heart and soul of India. ChatMe is not just building a product - we are creating a cultural phenomenon that will touch every Indian household.
+As someone who always believed that technology should serve humanity, I am excited to present this platform that understands the heart and soul of India. ChatMe is not just building a product - we are creating a cultural phenomenon that will touch every Indian household.
 
 **What would you like to know about this incredible journey?**`;
 
@@ -210,18 +201,14 @@ As someone who always believed that technology should serve humanity, I am excit
 Thank you for your excellent questions. We've covered all the key aspects of ChatMe.
 
 **Contact Information:**
-• Email: investors@chatme.at
+• Email: vaseekaran@chatme.at
 • Website: www.chatme.at
 
 Let's build India's first AI entertainment empire together! 🙏
 
-**Feel free to ask any custom questions you might have, or type your own message!**`;
+**Thank you for exploring ChatMe with me!**`;
 
-            this.addBotMessage(completionMessage, () => {
-                // Enable free-form chat
-                this.messageInput.placeholder = "Ask Dr. Kalam anything about ChatMe...";
-                this.messageInput.disabled = false;
-            });
+            this.addBotMessage(completionMessage);
             return;
         }
         
@@ -229,7 +216,7 @@ Let's build India's first AI entertainment empire together! 🙏
         const accordionHeader = document.createElement('div');
         accordionHeader.className = 'quick-replies-header';
         accordionHeader.innerHTML = `
-            <h4>💬 Ask Dr. Kalam a Question</h4>
+            <h4>💬 Ask APJ a Question</h4>
             <div class="quick-replies-toggle">
                 <span>${availableQuestions.length} questions available</span>
                 <i class="fas fa-chevron-down"></i>
@@ -294,47 +281,6 @@ Let's build India's first AI entertainment empire together! 🙏
                     this.showQuickReplies();
                 });
             }, 1000);
-        }
-    }
-
-    handleSendMessage() {
-        const message = this.messageInput.value.trim();
-        if (message && !this.isTyping) {
-            // Check if the message matches any of our predefined questions
-            const lowerMessage = message.toLowerCase();
-            let matchedQuestion = null;
-            
-            // Check for exact or partial matches with predefined questions
-            for (const question of this.quickReplies) {
-                const lowerQuestion = question.toLowerCase();
-                if (lowerMessage === lowerQuestion || 
-                    lowerMessage.includes(lowerQuestion.slice(0, 10)) || 
-                    this.hasCommonKeywords(lowerMessage, lowerQuestion)) {
-                    matchedQuestion = question;
-                    break;
-                }
-            }
-            
-            if (matchedQuestion && !this.usedQuestions.has(matchedQuestion)) {
-                // If it matches a predefined question, handle it as a quick reply
-                this.handleQuickReply(matchedQuestion);
-            } else {
-                // If no match or question already used, show a helpful message
-                this.addUserMessage(message);
-                setTimeout(() => {
-                    this.addBotMessage(`Thank you for your question: "${message}"
-
-I have detailed information prepared for specific aspects of our business. Please select from the available questions above, or ask about contacting our team.
-
-**For custom inquiries, please contact us at:**
-• Email: investors@chatme.at
-• Website: www.chatme.at`, () => {
-                        this.showQuickReplies();
-                    });
-                }, 1000);
-            }
-            
-            this.messageInput.value = '';
         }
     }
 
