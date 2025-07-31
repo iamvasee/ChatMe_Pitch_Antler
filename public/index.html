@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>ChatMe - Investor Pitch Deck</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="Logo Full White.png" as="image">
+    <link rel="preload" href="image.png" as="image">
+    <link rel="preload" href="message_received.mp3" as="audio" crossorigin>
+    <link rel="preload" href="message_sent.mp3" as="audio" crossorigin>
+    
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -13,7 +20,7 @@
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
             <div class="brand-logo">
-                <img src="Logo Full White.png" alt="ChatMe" class="logo-image">
+                <img src="Logo Full White.png" alt="ChatMe" class="logo-image" loading="eager">
             </div>
             <div class="loading-text">
                 <h2>Welcome to ChatMe</h2>
@@ -33,7 +40,7 @@
         <div class="chat-header">
             <div class="profile-info">
                 <div class="profile-pic">
-                    <img src="image.png" alt="APJ Abdul Kalam">
+                    <img src="image.png" alt="APJ Abdul Kalam" aria-label="Profile picture of Dr. APJ Abdul Kalam" loading="eager">
                 </div>
                 <div class="profile-details">
                     <h3>Dr. APJ Abdul Kalam</h3>
@@ -41,20 +48,20 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="btn-secondary" onclick="toggleFullscreen()" title="Toggle fullscreen">
-                    <i class="fas fa-expand"></i>
+                <button class="btn-secondary" onclick="toggleFullscreen()" title="Toggle fullscreen" aria-label="Toggle fullscreen mode">
+                    <i class="fas fa-expand" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
 
         <!-- Chat Messages -->
-        <div class="chat-messages" id="chatMessages">
+        <div class="chat-messages" id="chatMessages" role="log" aria-label="Chat conversation with Dr. APJ Abdul Kalam">
             <!-- Messages will be dynamically added here -->
         </div>
 
         <!-- Input Area -->
         <div class="chat-input-area">
-            <div class="quick-replies" id="quickReplies">
+            <div class="quick-replies" id="quickReplies" role="region" aria-label="Quick reply options">
                 <!-- Quick reply buttons will be added here -->
             </div>
         </div>

@@ -10,9 +10,9 @@ class ChatMePitchDeck {
         this.fullscreenPrompted = false;
         
         // Audio elements - handle missing files gracefully
-        this.botMessageSound = new Audio('Message received.mp3');
+        this.botMessageSound = new Audio('message_received.mp3');
         this.userMessageSound = new Audio('message_sent.mp3');
-        this.responseSound = new Audio('Message_received.mp3');
+        this.responseSound = new Audio('message_received.mp3');
         
         // Handle audio loading errors
         this.botMessageSound.addEventListener('error', () => console.log('Bot message sound not found'));
@@ -27,11 +27,13 @@ class ChatMePitchDeck {
         // Check if required elements exist
         if (!this.chatMessages || !this.quickRepliesContainer || !this.loadingScreen || !this.chatContainer) {
             console.error('Required DOM elements not found');
+            this.showErrorMessage('Failed to initialize the presentation. Please refresh the page.');
             return;
         }
         
         this.setupEventListeners();
         this.initializePresentation();
+        this.optimizePerformance();
     }
 
     initializePresentation() {
@@ -60,6 +62,152 @@ class ChatMePitchDeck {
     setupEventListeners() {
         // Attempt automatic fullscreen immediately when page loads
         this.attemptAutomaticFullscreen();
+        
+        // Add touch-friendly improvements
+        this.setupTouchOptimizations();
+    }
+
+    setupTouchOptimizations() {
+        // Add touch event listeners for better mobile interaction
+        if ('ontouchstart' in window) {
+            // Improve touch targets
+            document.addEventListener('touchstart', (e) => {
+                // Add visual feedback for touch
+                if (e.target.classList.contains('quick-reply') || 
+                    e.target.classList.contains('header-actions') ||
+                    e.target.closest('.quick-replies-header')) {
+                    e.target.style.transform = 'scale(0.95)';
+                }
+            }, { passive: true });
+            
+            document.addEventListener('touchend', (e) => {
+                // Remove visual feedback
+                if (e.target.classList.contains('quick-reply') || 
+                    e.target.classList.contains('header-actions') ||
+                    e.target.closest('.quick-replies-header')) {
+                    setTimeout(() => {
+                        e.target.style.transform = '';
+                    }, 150);
+                }
+            }, { passive: true });
+            
+            // Prevent zoom on double tap
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', (e) => {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    e.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+        }
+        
+        // Mobile-specific quick replies handling
+        this.setupMobileQuickReplies();
+    }
+
+    setupMobileQuickReplies() {
+        // Check if we're on mobile
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+            // Auto-show quick replies after a delay if user hasn't interacted
+            let quickRepliesShown = false;
+            
+            setTimeout(() => {
+                if (!quickRepliesShown) {
+                    this.ensureQuickRepliesVisible();
+                    quickRepliesShown = true;
+                }
+            }, 5000); // Show after 5 seconds if no interaction
+            
+            // Show quick replies when user scrolls to bottom
+            this.chatMessages.addEventListener('scroll', () => {
+                const isAtBottom = this.chatMessages.scrollTop + this.chatMessages.clientHeight >= this.chatMessages.scrollHeight - 50;
+                if (isAtBottom) {
+                    this.ensureQuickRepliesVisible();
+                }
+            });
+            
+            // Add a floating indicator when quick replies are hidden
+            this.addFloatingIndicator();
+        }
+    }
+
+    ensureQuickRepliesVisible() {
+        const quickReplies = document.querySelector('.quick-replies');
+        if (quickReplies) {
+            // Ensure the quick replies are visible
+            quickReplies.style.display = 'block';
+            quickReplies.style.opacity = '1';
+            
+            // Add a subtle animation to draw attention
+            quickReplies.style.animation = 'bounce 0.6s ease-in-out';
+            setTimeout(() => {
+                quickReplies.style.animation = '';
+            }, 600);
+        }
+    }
+
+    addFloatingIndicator() {
+        // Create a floating indicator that appears when quick replies might be hidden
+        const indicator = document.createElement('div');
+        indicator.className = 'floating-indicator';
+        indicator.innerHTML = '💬';
+        indicator.style.cssText = `
+            position: fixed;
+            bottom: 140px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            z-index: 998;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        `;
+        
+        document.body.appendChild(indicator);
+        
+        // Show indicator after a delay
+        setTimeout(() => {
+            indicator.style.opacity = '1';
+            indicator.style.transform = 'scale(1)';
+        }, 3000);
+        
+        // Click to show quick replies
+        indicator.addEventListener('click', () => {
+            this.ensureQuickRepliesVisible();
+            // Hide indicator after click
+            indicator.style.opacity = '0';
+            indicator.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                if (indicator.parentNode) {
+                    indicator.parentNode.removeChild(indicator);
+                }
+            }, 300);
+        });
+        
+        // Auto-hide indicator after 10 seconds
+        setTimeout(() => {
+            indicator.style.opacity = '0';
+            indicator.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                if (indicator.parentNode) {
+                    indicator.parentNode.removeChild(indicator);
+                }
+            }, 300);
+        }, 10000);
     }
 
     attemptAutomaticFullscreen() {
@@ -76,9 +224,59 @@ class ChatMePitchDeck {
         setTimeout(() => {
             this.enterFullscreen().catch(error => {
                 console.log('Automatic fullscreen failed:', error);
-                // No fallback button - user can use the header button if needed
+                // Show a subtle notification that fullscreen is available
+                this.showFullscreenHint();
             });
         }, 1500); // 1.5 second delay after page load
+    }
+
+    showFullscreenHint() {
+        // Create a subtle hint that fullscreen is available
+        const hint = document.createElement('div');
+        hint.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(139, 92, 246, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: 'Manrope', sans-serif;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        `;
+        hint.innerHTML = '💻 Click for fullscreen';
+        hint.title = 'Click to enter fullscreen mode';
+        
+        document.body.appendChild(hint);
+        
+        // Animate in
+        setTimeout(() => {
+            hint.style.opacity = '1';
+            hint.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Add click handler
+        hint.addEventListener('click', () => {
+            this.enterFullscreen().catch(error => {
+                console.log('Manual fullscreen failed:', error);
+            });
+        });
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            hint.style.opacity = '0';
+            hint.style.transform = 'translateX(20px)';
+            setTimeout(() => {
+                if (hint.parentNode) {
+                    hint.parentNode.removeChild(hint);
+                }
+            }, 300);
+        }, 5000);
     }
 
     startPresentation() {
@@ -121,12 +319,15 @@ As someone who always believed that technology should serve humanity, I am excit
             // Convert markdown-like formatting to HTML
             const formattedMessage = this.formatMessage(message);
             
+            // Sanitize HTML content before setting innerHTML
+            const sanitizedContent = this.sanitizeHTML(formattedMessage);
+            
             messageDiv.innerHTML = `
                 <div class="message-avatar">
-                    <img src="image.png" alt="APJ Abdul Kalam">
+                    <img src="image.png" alt="APJ Abdul Kalam" aria-label="Dr. APJ Abdul Kalam's avatar" loading="lazy">
                 </div>
-                <div class="message-content">
-                    <div class="message-html">${formattedMessage}</div>
+                <div class="message-content" role="article" aria-label="Message from Dr. APJ Abdul Kalam">
+                    <div class="message-html">${sanitizedContent}</div>
                 </div>
             `;
             
@@ -174,12 +375,16 @@ As someone who always believed that technology should serve humanity, I am excit
         
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message user';
+        
+        // Sanitize user message
+        const sanitizedMessage = this.sanitizeHTML(`<p>${message}</p>`);
+        
         messageDiv.innerHTML = `
-            <div class="message-content">
-                <p>${message}</p>
+            <div class="message-content" role="article" aria-label="Your message">
+                ${sanitizedMessage}
             </div>
             <div class="message-avatar">
-                <img src="image copy.png" alt="User">
+                <img src="image copy.png" alt="User" aria-label="Your avatar" loading="lazy">
             </div>
         `;
         
@@ -230,26 +435,47 @@ Let's build India's first AI entertainment empire together! 🙏
         // Create accordion structure
         const accordionHeader = document.createElement('div');
         accordionHeader.className = 'quick-replies-header';
-        accordionHeader.innerHTML = `
+        accordionHeader.setAttribute('role', 'button');
+        accordionHeader.setAttribute('tabindex', '0');
+        accordionHeader.setAttribute('aria-expanded', 'false');
+        accordionHeader.setAttribute('aria-controls', 'quick-replies-panel');
+        
+        // Sanitize accordion header HTML
+        const headerHTML = `
             <h4>💬 Ask APJ a Question</h4>
             <div class="quick-replies-toggle">
                 <span>${availableQuestions.length} questions available</span>
-                <i class="fas fa-chevron-down"></i>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
             </div>
         `;
+        accordionHeader.innerHTML = this.sanitizeHTML(headerHTML);
         
         const accordionPanel = document.createElement('div');
         accordionPanel.className = 'quick-replies-panel';
+        accordionPanel.setAttribute('id', 'quick-replies-panel');
+        accordionPanel.setAttribute('role', 'region');
+        accordionPanel.setAttribute('aria-label', 'Available questions');
         
         const questionsGrid = document.createElement('div');
         questionsGrid.className = 'quick-replies-grid';
+        questionsGrid.setAttribute('role', 'group');
+        questionsGrid.setAttribute('aria-label', 'Question options');
         
         // Add available questions
-        availableQuestions.forEach(reply => {
+        availableQuestions.forEach((reply, index) => {
             const button = document.createElement('button');
             button.className = 'quick-reply';
             button.textContent = reply;
+            button.setAttribute('type', 'button');
+            button.setAttribute('aria-label', `Ask: ${reply}`);
+            button.setAttribute('tabindex', '0');
             button.addEventListener('click', () => this.handleQuickReply(reply));
+            button.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.handleQuickReply(reply);
+                }
+            });
             questionsGrid.appendChild(button);
         });
         
@@ -266,9 +492,19 @@ Let's build India's first AI entertainment empire together! 🙏
             if (panel.classList.contains('open')) {
                 panel.classList.remove('open');
                 toggle.classList.remove('rotated');
+                accordionHeader.setAttribute('aria-expanded', 'false');
             } else {
                 panel.classList.add('open');
                 toggle.classList.add('rotated');
+                accordionHeader.setAttribute('aria-expanded', 'true');
+            }
+        });
+        
+        // Add keyboard support for accordion
+        accordionHeader.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                accordionHeader.click();
             }
         });
     }
@@ -327,15 +563,213 @@ Let's build India's first AI entertainment empire together! 🙏
             }
         });
     }
+
+    showErrorMessage(message) {
+        // Create error message element
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #dc3545;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 10000;
+            font-family: 'Manrope', sans-serif;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        `;
+        errorDiv.innerHTML = `
+            <h3 style="margin: 0 0 10px 0;">⚠️ Error</h3>
+            <p style="margin: 0;">${message}</p>
+        `;
+        
+        document.body.appendChild(errorDiv);
+        
+        // Remove error message after 5 seconds
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.parentNode.removeChild(errorDiv);
+            }
+        }, 5000);
+    }
+
+    optimizePerformance() {
+        // Preload critical images
+        const criticalImages = ['image.png', 'Logo Full White.png'];
+        criticalImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+
+        // Add intersection observer for lazy loading if supported
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                            observer.unobserve(img);
+                        }
+                    }
+                });
+            });
+
+            // Observe all images with data-src attribute
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+    }
+
+    sanitizeHTML(html) {
+        // Create a temporary div to parse HTML
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        
+        // Define allowed tags and attributes
+        const allowedTags = ['div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ul', 'ol', 'li', 'strong', 'b', 'em', 'i', 'br', 'span'];
+        const allowedAttributes = ['style', 'class', 'id'];
+        
+        // Recursively sanitize the DOM tree
+        const sanitizeNode = (node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return node.cloneNode(true);
+            }
+            
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const tagName = node.tagName.toLowerCase();
+                
+                // Only allow specific tags
+                if (!allowedTags.includes(tagName)) {
+                    return document.createTextNode(node.textContent);
+                }
+                
+                // Create new element with same tag
+                const newElement = document.createElement(tagName);
+                
+                // Copy allowed attributes
+                for (let attr of node.attributes) {
+                    if (allowedAttributes.includes(attr.name.toLowerCase())) {
+                        newElement.setAttribute(attr.name, attr.value);
+                    }
+                }
+                
+                // Recursively sanitize children
+                for (let child of node.childNodes) {
+                    const sanitizedChild = sanitizeNode(child);
+                    if (sanitizedChild) {
+                        newElement.appendChild(sanitizedChild);
+                    }
+                }
+                
+                return newElement;
+            }
+            
+            return null;
+        };
+        
+        // Sanitize all child nodes
+        const sanitizedNodes = [];
+        for (let child of temp.childNodes) {
+            const sanitized = sanitizeNode(child);
+            if (sanitized) {
+                sanitizedNodes.push(sanitized);
+            }
+        }
+        
+        // Return sanitized HTML
+        return sanitizedNodes.map(node => node.outerHTML || node.textContent).join('');
+    }
 }
 
 // Global functions
 function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
+    if (!document.fullscreenElement && 
+        !document.webkitFullscreenElement && 
+        !document.mozFullScreenElement && 
+        !document.msFullscreenElement) {
+        // Enter fullscreen
+        const element = document.documentElement;
+        if (element.requestFullscreen) {
+            element.requestFullscreen().catch(error => {
+                console.log('Fullscreen request failed:', error);
+                showFullscreenError();
+            });
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen().catch(error => {
+                console.log('Webkit fullscreen request failed:', error);
+                showFullscreenError();
+            });
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen().catch(error => {
+                console.log('Mozilla fullscreen request failed:', error);
+                showFullscreenError();
+            });
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen().catch(error => {
+                console.log('MS fullscreen request failed:', error);
+                showFullscreenError();
+            });
+        } else {
+            showFullscreenError();
+        }
     } else {
-        document.exitFullscreen();
+        // Exit fullscreen
+        if (document.exitFullscreen) {
+            document.exitFullscreen().catch(error => {
+                console.log('Exit fullscreen failed:', error);
+            });
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen().catch(error => {
+                console.log('Webkit exit fullscreen failed:', error);
+            });
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen().catch(error => {
+                console.log('Mozilla exit fullscreen failed:', error);
+            });
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen().catch(error => {
+                console.log('MS exit fullscreen failed:', error);
+            });
+        }
     }
+}
+
+function showFullscreenError() {
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #dc3545;
+        color: white;
+        padding: 16px 20px;
+        border-radius: 8px;
+        text-align: center;
+        z-index: 10000;
+        font-family: 'Manrope', sans-serif;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        font-size: 14px;
+    `;
+    errorDiv.innerHTML = `
+        <div style="margin-bottom: 8px;">⚠️</div>
+        <div>Fullscreen not supported in this browser</div>
+    `;
+    
+    document.body.appendChild(errorDiv);
+    
+    // Remove error message after 3 seconds
+    setTimeout(() => {
+        if (errorDiv.parentNode) {
+            errorDiv.parentNode.removeChild(errorDiv);
+        }
+    }, 3000);
 }
 
 // Initialize

@@ -63,9 +63,6 @@ const PITCH_DECK_CONFIG = {
 
         <p><strong>Character Examples:</strong> Baba Instagram, Danknath, Misti Didi, Sir Ratan Tata, APJ Abdul Kalam, mythological characters, and more!</p>
 
-        <p><strong>Technology Stack:</strong></p>
-        <p><em>Current:</em> Expo Dev (iOS/Android), Vercel PWA, Supabase Backend, OpenAI API</p>
-        <p><em>Future:</em> Multi-LLM support, Vector databases (Qdrant/Pinecone), RAG frameworks, ElevenLabs TTS, Whisper STT</p>
       </div>
     `,
 
