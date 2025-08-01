@@ -100,7 +100,6 @@ const PITCH_DECK_CONFIG = {
           <li><strong>Tokens:</strong> Prepaid credits (₹9 to ₹9999 packs)</li>
           <li><strong>Premium Features:</strong> Voice notes, exclusive content, character unlocks</li>
           <li><strong>Subscriptions:</strong> VIP plans (₹299–499/month) - Currently limited due to low trust economy</li>
-          <li><strong>BYOK Option:</strong> Users bring OpenAI API keys for data collection</li>
           <li><strong>In-App Ads:</strong> Native, non-intrusive brand placements</li>
         </ul>
 
@@ -214,10 +213,6 @@ const PITCH_DECK_CONFIG = {
         <p><strong>Join Us</strong></p>
         <p>ChatMe is building the future of emotional AI for India. We're creating not just a product, but a cultural phenomenon.</p>
         <p>Let's build India's first AI entertainment empire together.</p>
-
-        <p><strong>Contact Information:</strong></p>
-        <p>Email: vaseekaran@chatme.at<br>
-        Website: www.chatme.at</p>
       </div>
     `,
 
@@ -447,12 +442,11 @@ const PITCH_DECK_CONFIG = {
 
         <p><strong>Current Languages:</strong></p>
         <ul>
-          <li><strong>Hindi:</strong> Primary language with Hinglish support</li>
+          <li><strong>Hindi:</strong> With Hinglish support</li>
           <li><strong>Tamil:</strong> Full native support</li>
           <li><strong>Telugu:</strong> Complete language coverage</li>
           <li><strong>Marathi:</strong> Regional language support</li>
-          <li><strong>Bengali:</strong> Eastern India coverage</li>
-          <li><strong>English:</strong> International standard</li>
+          <li><strong>English:</strong> Indian standard</li>
         </ul>
 
         <p><strong>Planned Expansion (10+ Languages):</strong></p>
@@ -460,6 +454,7 @@ const PITCH_DECK_CONFIG = {
           <li><strong>Gujarati:</strong> Western India market</li>
           <li><strong>Kannada:</strong> Karnataka region</li>
           <li><strong>Malayalam:</strong> Kerala market</li>
+          <li><strong>Bengali:</strong> Eastern India coverage</li>
           <li><strong>Punjabi:</strong> Northern India</li>
           <li><strong>Urdu:</strong> Cultural diversity</li>
           <li><strong>Assamese:</strong> Northeast India</li>
@@ -472,7 +467,6 @@ const PITCH_DECK_CONFIG = {
           <li><strong>Dialect Variations:</strong> Different regional versions of same language</li>
           <li><strong>Code-Switching:</strong> Natural Hinglish and mixed language support</li>
         </ul>
-
         <p><strong>Technology:</strong></p>
         <ul>
           <li><strong>Multilingual NLP:</strong> Support for 10+ Indian languages with dialect variations</li>
@@ -488,11 +482,13 @@ const PITCH_DECK_CONFIG = {
 
         <p><strong>Token Packs:</strong></p>
         <ul>
-          <li><strong>₹9 Pack:</strong> Entry-level for new users</li>
-          <li><strong>₹99 Pack:</strong> Most popular option</li>
-          <li><strong>₹499 Pack:</strong> Power user option</li>
-          <li><strong>₹999 Pack:</strong> Heavy user package</li>
-          <li><strong>₹9999 Pack:</strong> Premium unlimited access</li>
+          <li><strong>Mini Chai (₹9):</strong> 40 tokens - A quick sip for a quick chat. Perfect for first-timers!</li>
+          <li><strong>Dosa Delight (₹49):</strong> 245 tokens - A crispy deal for regulars. Good value for consistent users!</li>
+          <li><strong>Bollywood Bash (₹99):</strong> 540 tokens - The smart choice! Best value for money - dance through your chats! ⭐ MOST POPULAR</li>
+          <li><strong>Festival Fireworks (₹199):</strong> 1090 tokens - Celebrate with a solid burst of tokens. Great for heavy users!</li>
+          <li><strong>Super Saver (₹499):</strong> 2600 tokens - For power users who want bulk convenience. Skip frequent purchases!</li>
+          <li><strong>Maharaja Mega (₹999):</strong> 5200 tokens - Rule the chat kingdom with premium convenience. For serious power users.</li>
+          <li><strong>Infinity Pack (₹9999):</strong> 48000 tokens - For legends only. Ultimate convenience for enterprise-level usage. Premium tier.</li>
         </ul>
 
         <p><strong>Free Tokens:</strong></p>
