@@ -500,10 +500,9 @@ const PITCH_DECK_CONFIG = {
 
         <p><strong>Token Usage:</strong></p>
         <ul>
-          <li><strong>Basic Chat:</strong> 1 token per message</li>
-          <li><strong>Voice Messages:</strong> 3 tokens per voice interaction</li>
-          <li><strong>Premium Characters:</strong> 2 tokens per message</li>
-          <li><strong>Exclusive Content:</strong> 5 tokens for special features</li>
+          <li><strong>Chat:</strong> 1 - 3 token per message</li>
+          <li><strong>Premium Characters:</strong> 5 tokens per message</li>
+          <li><strong>Exclusive Content:</strong> 10 tokens for special features</li>
         </ul>
 
         <p><strong>Gamification:</strong></p>
@@ -608,7 +607,7 @@ const PITCH_DECK_CONFIG = {
         <h2 style="color:#dc3545;margin-top:0;">📞 Let's Connect, Antler India!</h2>
 
         <p><strong>Fun fact:</strong> I literally cross your Indiranagar office every single day! 🚶‍♂️</p>
-        <p>Small world, right? Maybe we should make this daily crossing more productive than just avoiding Bangalore traffic.</p>
+        <p>Small world, right? Maybe we've already crossed paths at 12th Main traffic signal! 🚦</p>
 
         <p><strong>Contact Information:</strong></p>
         <ul>
@@ -617,21 +616,6 @@ const PITCH_DECK_CONFIG = {
           <li><strong>Website:</strong> www.chatme.at</li>
           <li><strong>Location:</strong> Indiranagar, Bangalore (your neighbor! 🏠)</li>
         </ul>
-
-        <p><strong>Why Antler India?</strong></p>
-        <ul>
-          <li><strong>Local Advantage:</strong> I'm literally your neighbor in Indiranagar - no timezone issues!</li>
-          <li><strong>India-First Focus:</strong> You understand the Indian market better than anyone</li>
-          <li><strong>AI Revolution:</strong> Perfect timing for India's AI moment</li>
-          <li><strong>Cultural Moat:</strong> We're building something global players can't replicate</li>
-        </ul>
-
-        <p><strong>Next Steps:</strong></p>
-        <p>Let's grab a coffee at your favorite Indiranagar spot and discuss how we can build India's first AI entertainment empire together. I promise to bring better conversation than my daily traffic rants! ☕</p>
-
-        <p><strong>P.S.:</strong> If you're reading this, we're probably closer than you think. Maybe we've already crossed paths at that traffic signal! 🚦</p>
-
-        <p><strong>Let's make this daily crossing count! 🙏</strong></p>
       </div>
     `
   }
